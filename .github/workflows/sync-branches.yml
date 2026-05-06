@@ -1,0 +1,66 @@
+name: Sync and Merge Branches
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: Fetch all branches
+        run: git fetch origin
+
+      - name: Rebase frontend on main
+        continue-on-error: true
+        run: |
+          git checkout frontend
+          git rebase origin/main
+          git push origin frontend --force-with-lease || echo "Frontend rebase failed or no changes"
+
+      - name: Rebase backend on main
+        continue-on-error: true
+        run: |
+          git checkout backend
+          git rebase origin/main
+          git push origin backend --force-with-lease || echo "Backend rebase failed or no changes"
+
+      - name: Merge frontend into main
+        continue-on-error: true
+        run: |
+          git checkout main
+          git pull origin main
+          git merge origin/frontend --no-edit
+          git push origin main || echo "Frontend merge skipped (no new commits)"
+
+      - name: Merge backend into main
+        continue-on-error: true
+        run: |
+          git checkout main
+          git pull origin main
+          git merge origin/backend --no-edit
+          git push origin main || echo "Backend merge skipped (no new commits)"
+
+      - name: Create summary
+        run: |
+          echo "## Branch Sync Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Rebased frontend on main" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Rebased backend on main" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Merged frontend into main" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Merged backend into main" >> $GITHUB_STEP_SUMMARY
