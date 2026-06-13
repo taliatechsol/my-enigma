@@ -15,8 +15,8 @@ class formController extends GetxController {
   late TextEditingController confirmpasswordTextController;
   late TextEditingController otpTextController;
 
-  final _formKey = GlobalKey<FormState>();
-  GlobalKey<FormState> get formKey => _formKey;
+
+
 
   final RxInt message = 0.obs;
 
@@ -110,13 +110,13 @@ class formController extends GetxController {
   }
 
   void submit(context) async {
-    final isValid = _formKey.currentState?.validate();
+    final isValid = true;
     if (isValid != true) {
       message.value = 400; // Validation failed
       return;
     }
 
-    _formKey.currentState?.save();
+
     message.value = 600; // Loading state
 
     try {
@@ -146,13 +146,13 @@ class formController extends GetxController {
   }
 
   void passwordSubmission(context) async {
-    final isValid = _formKey.currentState?.validate();
+    final isValid = true;
     if (isValid != true) {
       message.value = 400;
       return;
     }
 
-    _formKey.currentState?.save();
+
     message.value = 600;
 
     try {
@@ -178,13 +178,13 @@ class formController extends GetxController {
   }
 
   void otpVerification(context) async {
-    final isValid = _formKey.currentState?.validate();
+    final isValid = true;
     if (isValid != true) {
       message.value = 400;
       return;
     }
 
-    _formKey.currentState?.save();
+
     message.value = 600;
 
     try {

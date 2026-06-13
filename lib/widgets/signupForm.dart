@@ -13,6 +13,7 @@ class signupForm extends GetView<formController> {
 
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: identical(_formControllerMsg.message, 600)
@@ -27,8 +28,10 @@ class signupForm extends GetView<formController> {
                   : SafeArea(
                       child: Scaffold(
                         body: SingleChildScrollView(
-                          child: Form(
-                            key: _formControllerMsg.formKey,
+
+                        child: Form(
+                          key: _formKey,
+
                             child: Column(
                               children: <Widget>[
                                 SizedBox(
@@ -200,7 +203,10 @@ class signupForm extends GetView<formController> {
                                               ),
                                             ),
                                           );
-                                          controller.submit(context);
+                                          if (_formKey.currentState?.validate() == true) {
+                                            _formKey.currentState?.save();
+                                            controller.submit(context);
+                                          }
                                         },
                                         child: const Text(
                                           "Next",

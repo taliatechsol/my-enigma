@@ -49,7 +49,7 @@ class otpWidget extends GetView<formController> {
                 _formControllerMsg.otpValidator(code);
               },
               onSubmit: (String value) {
-                _formControllerMsg.otpVerification(value);
+                if (value.length == 4) { _formControllerMsg.otpVerification(value); }
               },
             ),
             SizedBox(

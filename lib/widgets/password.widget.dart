@@ -12,6 +12,7 @@ class passwordForm extends GetView<formController> {
 
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: identical(_formController.message, 600)
@@ -25,8 +26,10 @@ class passwordForm extends GetView<formController> {
                       "A user already uses the same mobile number.. Add a new mobile number !!")
                   : Scaffold(
                       body: SingleChildScrollView(
+
                         child: Form(
-                          key: _formController.formKey,
+                          key: _formKey,
+
                           child: Column(
                             children: <Widget>[
                               SizedBox(
@@ -148,7 +151,10 @@ class passwordForm extends GetView<formController> {
                                             ),
                                           ),
                                         );
-                                        controller.passwordSubmission(context);
+                                        if (_formKey.currentState?.validate() == true) {
+                                            _formKey.currentState?.save();
+                                            controller.passwordSubmission(context);
+                                          }
                                       },
                                       child: const Text(
                                         "Next",
