@@ -7,7 +7,7 @@ import 'package:pharmacy/widgets/dialog.dart';
 
 class signupForm extends GetView<formController> {
   signupForm({Key? key}) : super(key: key);
-  final _formKey = GlobalKey<FormState>();
+
 
   final formController _formControllerMsg = Get.put(formController());
 
@@ -28,7 +28,7 @@ class signupForm extends GetView<formController> {
                       child: Scaffold(
                         body: SingleChildScrollView(
                           child: Form(
-                            key: _formKey,
+                            key: _formControllerMsg.formKey,
                             child: Column(
                               children: <Widget>[
                                 SizedBox(

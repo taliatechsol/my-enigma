@@ -86,7 +86,7 @@ class otpWidget extends GetView<formController> {
                     "Resend OTP",
                   ),
                   style: TextButton.styleFrom(
-                      primary: Colors.green,
+                      foregroundColor: Colors.green,
                       textStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 12,

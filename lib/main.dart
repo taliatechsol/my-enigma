@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmacy/services/router.service.dart';
 import 'package:pharmacy/views/index.dart';
+import 'package:pharmacy/services/user.service.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Get.put(userService());
   runApp(const MyApp());
 }
 

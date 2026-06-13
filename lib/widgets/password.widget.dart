@@ -7,7 +7,7 @@ import 'package:pharmacy/widgets/dialog.dart';
 
 class passwordForm extends GetView<formController> {
   passwordForm({Key? key}) : super(key: key);
-  final _formKey = GlobalKey<FormState>();
+
   final _formController = Get.put(formController());
 
   @override
@@ -26,7 +26,7 @@ class passwordForm extends GetView<formController> {
                   : Scaffold(
                       body: SingleChildScrollView(
                         child: Form(
-                          key: _formKey,
+                          key: _formController.formKey,
                           child: Column(
                             children: <Widget>[
                               SizedBox(

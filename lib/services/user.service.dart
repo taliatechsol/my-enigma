@@ -1,49 +1,82 @@
 // ignore_for_file: camel_case_types, avoid_print, library_prefixes
 
 import 'package:get/get.dart';
-import 'apiService.dart' as globalService;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:async';
+import 'apiService.dart';
 
-class userService extends GetConnect {
-  String apiURL = globalService.baseURL;
-
+class userService extends GetxService {
   Future<dynamic> registerUser(String username, String email,
       String mobileNumber, String pharmacyName, String pharmacyCode) async {
-    final dataObject = {
-      "userName": username,
-      "mobileNumber": mobileNumber,
-      "email": email,
-      "pharmacyCode": pharmacyCode,
-      "pharmacyName": pharmacyName
-    };
+    try {
+      final dataObject = {
+        "userName": username,
+        "mobileNumber": mobileNumber,
+        "email": email,
+        "pharmacyCode": pharmacyCode,
+        "pharmacyName": pharmacyName
+      };
 
-    final response = await post(apiURL + 'user', dataObject);
+      final response = await ApiService.fetchWithRetry(
+        'user',
+        method: 'POST',
+        body: dataObject,
+      );
 
-    if (response.statusCode == 500 || response.statusCode == 404) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return jsonDecode(response.body);
+      } else if (response.statusCode == 409) {
+        return {"status": 409, "message": "User already exists"};
+      } else {
+        return {"status": response.statusCode, "message": "Server error"};
+      }
+    } on TimeoutException {
+      return {"status": 408, "message": "Request timeout"};
+    } catch (e) {
+      return {"status": 500, "message": e.toString()};
     }
   }
 
-  Future<dynamic> registerPassword(String password, String _id) async {
-    final dataObject = {"password": password, "_id": _id};
-    final response = await post(apiURL + 'user/password', dataObject);
+  Future<dynamic> registerPassword(String password, String id) async {
+    try {
+      final dataObject = {"password": password, "_id": id};
+      final response = await ApiService.fetchWithRetry(
+        'user/password',
+        method: 'POST',
+        body: dataObject,
+      );
 
-    if (response.statusCode == 500 || response.statusCode == 404) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
+      return _handleResponse(response);
+    } on TimeoutException {
+      return {"status": 408, "message": "Request timeout"};
+    } catch (e) {
+      return {"status": 500, "message": e.toString()};
     }
   }
 
-  Future<dynamic> otpVerification(String otp, String _id) async {
-    final dataObject = {"otp": otp, '_id': _id};
-    final response = await post(apiURL + 'user/otp', dataObject);
+  Future<dynamic> otpVerification(String otp, String id) async {
+    try {
+      final dataObject = {"otp": otp, '_id': id};
+      final response = await ApiService.fetchWithRetry(
+        'user/otp',
+        method: 'POST',
+        body: dataObject,
+      );
 
-    if (response.statusCode == 500 || response.statusCode == 404) {
-      return Future.error(response.statusText!);
+      return _handleResponse(response);
+    } on TimeoutException {
+      return {"status": 408, "message": "Request timeout"};
+    } catch (e) {
+      return {"status": 500, "message": e.toString()};
+    }
+  }
+
+  Map<String, dynamic> _handleResponse(http.Response response) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return jsonDecode(response.body);
     } else {
-      return response.body;
+      return {"status": response.statusCode, "message": "API Error"};
     }
   }
 }
