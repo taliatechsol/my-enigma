@@ -49,7 +49,7 @@ class otpWidget extends GetView<formController> {
                 _formControllerMsg.otpValidator(code);
               },
               onSubmit: (String value) {
-                _formControllerMsg.otpVerification(value);
+                if (value.length == 4) { _formControllerMsg.otpVerification(value); }
               },
             ),
             SizedBox(
@@ -86,7 +86,7 @@ class otpWidget extends GetView<formController> {
                     "Resend OTP",
                   ),
                   style: TextButton.styleFrom(
-                      primary: Colors.green,
+                      foregroundColor: Colors.green,
                       textStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 12,

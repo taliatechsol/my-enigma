@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:pharmacy/controllers/form.controller.dart';
 import 'package:pharmacy/widgets/signupForm.dart';
 
-class signup extends StatelessWidget {
-  signup({Key? key}) : super(key: key);
+class signupView extends StatelessWidget {
+  signupView({Key? key}) : super(key: key);
 
   final formController controller = Get.put(formController());
 
@@ -15,7 +15,7 @@ class signup extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
-        body: signupForm(),
+        body: signup(),
       ),
     );
   }

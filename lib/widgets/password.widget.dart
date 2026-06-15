@@ -5,10 +5,16 @@ import 'package:get/get.dart';
 import 'package:pharmacy/controllers/form.controller.dart';
 import 'package:pharmacy/widgets/dialog.dart';
 
-class passwordForm extends GetView<formController> {
-  passwordForm({Key? key}) : super(key: key);
-  final _formKey = GlobalKey<FormState>();
+class passwordForm extends StatefulWidget {
+  const passwordForm({Key? key}) : super(key: key);
+
+  @override
+  _passwordFormState createState() => _passwordFormState();
+}
+
+class _passwordFormState extends State<passwordForm> {
   final _formController = Get.put(formController());
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +87,7 @@ class passwordForm extends GetView<formController> {
                                   obscuringCharacter: "*",
                                   validator: (value) {
                                     return _formController
-                                        .passwordValidator(value!);
+                                        .passwordValidator(value);
                                   },
                                 ),
                               ),
@@ -101,7 +107,7 @@ class passwordForm extends GetView<formController> {
                                   obscuringCharacter: "*",
                                   validator: (value) {
                                     return _formController
-                                        .passwordValidator(value!);
+                                        .passwordValidator(value);
                                   },
                                 ),
                               ),
@@ -124,17 +130,17 @@ class passwordForm extends GetView<formController> {
                                         ),
                                       ),
                                       style: ButtonStyle(
-                                        shape: MaterialStateProperty.all(
+                                        shape: WidgetStateProperty.all(
                                           RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(50.0),
                                           ),
                                         ),
                                         backgroundColor:
-                                            MaterialStateProperty.all<Color>(
+                                            WidgetStateProperty.all<Color>(
                                                 Colors.grey),
                                         shadowColor:
-                                            MaterialStateProperty.all<Color>(
+                                            WidgetStateProperty.all<Color>(
                                                 Colors.grey),
                                       ),
                                     ),
@@ -148,7 +154,10 @@ class passwordForm extends GetView<formController> {
                                             ),
                                           ),
                                         );
-                                        controller.passwordSubmission(context);
+                                        if (_formKey.currentState?.validate() == true) {
+                                          _formKey.currentState?.save();
+                                          _formController.passwordSubmission(context);
+                                        }
                                       },
                                       child: const Text(
                                         "Next",
@@ -158,17 +167,17 @@ class passwordForm extends GetView<formController> {
                                         ),
                                       ),
                                       style: ButtonStyle(
-                                        shape: MaterialStateProperty.all(
+                                        shape: WidgetStateProperty.all(
                                           RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(50.0),
                                           ),
                                         ),
                                         backgroundColor:
-                                            MaterialStateProperty.all<Color>(
+                                            WidgetStateProperty.all<Color>(
                                                 Colors.green),
                                         shadowColor:
-                                            MaterialStateProperty.all<Color>(
+                                            WidgetStateProperty.all<Color>(
                                                 Colors.grey),
                                       ),
                                     ),
