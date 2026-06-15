@@ -1,33 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SalvageDashboard extends StatelessWidget {
+class SalvageDashboard extends StatefulWidget {
   const SalvageDashboard({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    // Mock Data for UI
-    final List<Map<String, dynamic>> atRiskInventory = [
-      {
-        "name": "Lisinopril 10mg",
-        "batch": "B-49281",
-        "expiry": "2 Months",
-        "currentProbability": "15%",
-        "targetPharmacy": "Downtown Meds (4 miles)",
-        "targetProbability": "88%",
-        "savedRevenue": "\$320.00"
-      },
-      {
-        "name": "Metformin 500mg",
-        "batch": "M-88321",
-        "expiry": "1 Month",
-        "currentProbability": "5%",
-        "targetPharmacy": "City Care Pharmacy (12 miles)",
-        "targetProbability": "75%",
-        "savedRevenue": "\$150.00"
-      }
-    ];
+  _SalvageDashboardState createState() => _SalvageDashboardState();
+}
 
+class _SalvageDashboardState extends State<SalvageDashboard> {
+  final ScrollController _scrollController = ScrollController();
+  final List<Map<String, dynamic>> _atRiskInventory = [];
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMoreData(); // Initial load
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        _loadMoreData();
+      }
+    });
+  }
+
+  Future<void> _loadMoreData() async {
+    if (_isLoading) return;
+    setState(() => _isLoading = true);
+
+    // Mock network delay
+    await Future.delayed(const Duration(seconds: 1));
+
+    // Append mock data
+    setState(() {
+      _atRiskInventory.addAll([
+        {
+          "name": "Lisinopril 10mg - Batch ${_atRiskInventory.length + 1}",
+          "batch": "B-${49281 + _atRiskInventory.length}",
+          "expiry": "2 Months",
+          "currentProbability": "15%",
+          "targetPharmacy": "Downtown Meds (4 miles)",
+          "targetProbability": "88%",
+          "savedRevenue": "\$320.00"
+        },
+        {
+          "name": "Metformin 500mg - Batch ${_atRiskInventory.length + 2}",
+          "batch": "M-${88321 + _atRiskInventory.length}",
+          "expiry": "1 Month",
+          "currentProbability": "5%",
+          "targetPharmacy": "City Care Pharmacy (12 miles)",
+          "targetProbability": "75%",
+          "savedRevenue": "\$150.00"
+        }
+      ]);
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dynamic Routing (Salvage)'),
@@ -50,9 +87,19 @@ class SalvageDashboard extends StatelessWidget {
             const SizedBox(height: 15),
             Expanded(
               child: ListView.builder(
-                itemCount: atRiskInventory.length,
+                controller: _scrollController,
+                itemCount: _atRiskInventory.length + (_isLoading ? 1 : 0),
                 itemBuilder: (context, index) {
-                  final item = atRiskInventory[index];
+                  if (index == _atRiskInventory.length) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+
+                  final item = _atRiskInventory[index];
                   return Card(
                     elevation: 3,
                     margin: const EdgeInsets.symmetric(vertical: 8),
