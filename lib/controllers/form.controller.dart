@@ -15,9 +15,6 @@ class formController extends GetxController {
   late TextEditingController confirmpasswordTextController;
   late TextEditingController otpTextController;
 
-
-
-
   final RxInt message = 0.obs;
 
   @override
@@ -110,13 +107,6 @@ class formController extends GetxController {
   }
 
   void submit(context) async {
-    final isValid = true;
-    if (isValid != true) {
-      message.value = 400; // Validation failed
-      return;
-    }
-
-
     message.value = 600; // Loading state
 
     try {
@@ -146,13 +136,6 @@ class formController extends GetxController {
   }
 
   void passwordSubmission(context) async {
-    final isValid = true;
-    if (isValid != true) {
-      message.value = 400;
-      return;
-    }
-
-
     message.value = 600;
 
     try {
@@ -177,14 +160,7 @@ class formController extends GetxController {
     }
   }
 
-  void otpVerification(context) async {
-    final isValid = true;
-    if (isValid != true) {
-      message.value = 400;
-      return;
-    }
-
-
+  void otpVerification(String otp) async {
     message.value = 600;
 
     try {
@@ -196,7 +172,7 @@ class formController extends GetxController {
       }
 
       final otpVerf = await Get.find<userService>().otpVerification(
-          otpTextController.text, userId);
+          otp, userId);
 
       if (otpVerf['status'] == 200) {
         message.value = 200;

@@ -5,14 +5,19 @@ import 'package:get/get.dart';
 import 'package:pharmacy/controllers/form.controller.dart';
 import 'package:pharmacy/widgets/dialog.dart';
 
-class passwordForm extends GetView<formController> {
-  passwordForm({Key? key}) : super(key: key);
+class passwordForm extends StatefulWidget {
+  const passwordForm({Key? key}) : super(key: key);
 
+  @override
+  _passwordFormState createState() => _passwordFormState();
+}
+
+class _passwordFormState extends State<passwordForm> {
   final _formController = Get.put(formController());
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: identical(_formController.message, 600)
@@ -26,10 +31,8 @@ class passwordForm extends GetView<formController> {
                       "A user already uses the same mobile number.. Add a new mobile number !!")
                   : Scaffold(
                       body: SingleChildScrollView(
-
                         child: Form(
                           key: _formKey,
-
                           child: Column(
                             children: <Widget>[
                               SizedBox(
@@ -84,7 +87,7 @@ class passwordForm extends GetView<formController> {
                                   obscuringCharacter: "*",
                                   validator: (value) {
                                     return _formController
-                                        .passwordValidator(value!);
+                                        .passwordValidator(value);
                                   },
                                 ),
                               ),
@@ -104,7 +107,7 @@ class passwordForm extends GetView<formController> {
                                   obscuringCharacter: "*",
                                   validator: (value) {
                                     return _formController
-                                        .passwordValidator(value!);
+                                        .passwordValidator(value);
                                   },
                                 ),
                               ),
@@ -127,17 +130,17 @@ class passwordForm extends GetView<formController> {
                                         ),
                                       ),
                                       style: ButtonStyle(
-                                        shape: MaterialStateProperty.all(
+                                        shape: WidgetStateProperty.all(
                                           RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(50.0),
                                           ),
                                         ),
                                         backgroundColor:
-                                            MaterialStateProperty.all<Color>(
+                                            WidgetStateProperty.all<Color>(
                                                 Colors.grey),
                                         shadowColor:
-                                            MaterialStateProperty.all<Color>(
+                                            WidgetStateProperty.all<Color>(
                                                 Colors.grey),
                                       ),
                                     ),
@@ -152,9 +155,9 @@ class passwordForm extends GetView<formController> {
                                           ),
                                         );
                                         if (_formKey.currentState?.validate() == true) {
-                                            _formKey.currentState?.save();
-                                            controller.passwordSubmission(context);
-                                          }
+                                          _formKey.currentState?.save();
+                                          _formController.passwordSubmission(context);
+                                        }
                                       },
                                       child: const Text(
                                         "Next",
@@ -164,17 +167,17 @@ class passwordForm extends GetView<formController> {
                                         ),
                                       ),
                                       style: ButtonStyle(
-                                        shape: MaterialStateProperty.all(
+                                        shape: WidgetStateProperty.all(
                                           RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(50.0),
                                           ),
                                         ),
                                         backgroundColor:
-                                            MaterialStateProperty.all<Color>(
+                                            WidgetStateProperty.all<Color>(
                                                 Colors.green),
                                         shadowColor:
-                                            MaterialStateProperty.all<Color>(
+                                            WidgetStateProperty.all<Color>(
                                                 Colors.grey),
                                       ),
                                     ),
